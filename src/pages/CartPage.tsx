@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useBasket } from '@/stores/BasketContext'
 import CartItem from '@/components/CartItem'
@@ -6,14 +5,6 @@ import CartSummary from '@/components/CartSummary'
 
 export default function CartPage() {
   const basketStore = useBasket()
-  const fetched = useRef(false)
-
-  useEffect(() => {
-    if (fetched.current) return
-    fetched.current = true
-    basketStore.fetchBasket()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   if (basketStore.state.loading) {
     return (
