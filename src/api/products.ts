@@ -1,24 +1,24 @@
 import api from './client'
-import type { Product, PaginatedResult } from '@/types'
+import type { Product, PaginatedResult, CreateProductRequest, UpdateProductRequest } from '@/types'
 
 export const productsApi = {
   getAll(params?: Record<string, string | number>) {
     return api.get<PaginatedResult<Product>>('/products', { params })
   },
 
-  getById(id: number) {
+  getById(id: string) {
     return api.get<Product>(`/products/${id}`)
   },
 
-  create(product: Omit<Product, 'id'>) {
-    return api.post<Product>('/products', product)
+  create(data: CreateProductRequest) {
+    return api.post<{ id: string }>('/products', data)
   },
 
-  update(name: string, product: Partial<Product>) {
-    return api.put<Product>(`/products/${encodeURIComponent(name)}`, product)
+  update(currentName: string, data: UpdateProductRequest) {
+    return api.put<{ isSuccess: boolean }>(`/products/${encodeURIComponent(currentName)}`, data)
   },
 
   delete(name: string) {
-    return api.delete(`/products/${encodeURIComponent(name)}`)
+    return api.delete<{ isSuccess: boolean }>(`/products/${encodeURIComponent(name)}`)
   },
 }

@@ -46,8 +46,8 @@ interface BasketContextValue {
   initCart: (userName: string) => void
   fetchBasket: () => Promise<void>
   addItem: (product: Product, quantity?: number) => void
-  updateQuantity: (productId: number, quantity: number) => void
-  removeItem: (productId: number) => void
+  updateQuantity: (productId: string, quantity: number) => void
+  removeItem: (productId: string) => void
   clearBasket: () => Promise<void>
 }
 
@@ -129,7 +129,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
             productName: product.name,
             price: product.price,
             quantity,
-            imageUrl: product.imageFile || '',
+            imageUrl: product.imageUrl || product.imageFiles || '',
           },
         ]
       }
@@ -141,7 +141,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
   )
 
   const updateQuantity = useCallback(
-    (productId: number, quantity: number) => {
+    (productId: string, quantity: number) => {
       if (quantity <= 0) {
         const newItems = state.cart.items.filter((i) => i.productId !== productId)
         dispatch({ type: 'SET_ITEMS', payload: newItems })
@@ -159,7 +159,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
   )
 
   const removeItem = useCallback(
-    (productId: number) => {
+    (productId: string) => {
       const newItems = state.cart.items.filter((i) => i.productId !== productId)
       dispatch({ type: 'SET_ITEMS', payload: newItems })
       saveBasket(newItems)

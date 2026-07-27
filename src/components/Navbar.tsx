@@ -1,23 +1,8 @@
-import { useState, useCallback } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useBasket } from '@/stores/BasketContext'
-import { useProducts } from '@/stores/ProductsContext'
-import { useDebounce } from '@/hooks/useDebounce'
 
 export default function Navbar() {
   const basketStore = useBasket()
-  const productsStore = useProducts()
-  const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const debouncedSearch = useDebounce(
-    useCallback(() => {
-      productsStore.setSearchQuery(searchQuery)
-      productsStore.fetchProducts()
-      navigate('/')
-    }, [searchQuery, productsStore, navigate]),
-    300
-  )
 
   return (
     <nav className="bg-white shadow-md">
@@ -28,19 +13,15 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-6">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value)
-                  debouncedSearch()
-                }}
-                placeholder="Buscar productos..."
-                className="border rounded-lg px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
+            <Link to="/" className="text-gray-600 hover:text-gray-800">
+              Inicio
+            </Link>
+            <Link to="/products" className="text-gray-600 hover:text-gray-800">
+              Productos
+            </Link>
+            <Link to="/admin/products" className="text-gray-600 hover:text-gray-800">
+              Administrar
+            </Link>
             <Link
               to="/cart"
               className="relative flex items-center gap-2 text-gray-600 hover:text-gray-800"

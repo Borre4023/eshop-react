@@ -63,7 +63,7 @@ interface ProductsContextValue {
   hasProducts: boolean
   isLoading: boolean
   fetchProducts: () => Promise<void>
-  fetchProductById: (id: number) => Promise<void>
+  fetchProductById: (id: string) => Promise<void>
   setSearchQuery: (query: string) => void
   setPage: (page: number) => void
 }
@@ -98,8 +98,8 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
       dispatch({
         type: 'FETCH_SUCCESS',
         payload: {
-          products: result.data || (result as unknown as Product[]) || [],
-          totalCount: result.totalCount || 0,
+          products: result.data || [],
+          totalCount: result.count || 0,
           pageIndex: result.pageIndex || 1,
         },
       })
@@ -111,7 +111,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
     }
   }, [state.pageIndex, state.pageSize, state.searchQuery])
 
-  const fetchProductById = useCallback(async (id: number) => {
+  const fetchProductById = useCallback(async (id: string) => {
     dispatch({ type: 'FETCH_START' })
     try {
       const response = await productsApi.getById(id)

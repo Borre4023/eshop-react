@@ -20,7 +20,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <div className="h-48 bg-gray-200 overflow-hidden">
         <img
-          src={product.imageFile || '/placeholder.png'}
+          src={product.imageUrl || product.imageFiles || '/placeholder.png'}
           alt={product.name}
           className="w-full h-full object-cover"
           onError={(e) => {
@@ -31,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       <div className="p-4">
         <div className="flex gap-1 mb-2 flex-wrap">
-          {product.category?.map((cat) => (
+          {product.category.map((cat) => (
             <span
               key={cat}
               className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
@@ -46,7 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </h3>
 
         <p className="text-gray-500 text-sm mb-3 line-clamp-2">
-          {product.description || 'Sin descripcion'}
+          {product.descripcion || 'Sin descripcion'}
         </p>
 
         <p className="text-xl font-bold text-blue-600 mb-3">

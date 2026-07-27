@@ -1,15 +1,15 @@
 export interface Product {
-  id: number
+  id: string
   name: string
-  description?: string
+  descripcion: string
   price: number
-  imageFile?: string
-  category?: string[]
-  availableStock?: number
+  category: string[]
+  imageFiles: string
+  imageUrl?: string
 }
 
 export interface CartItem {
-  productId: number
+  productId: string
   productName: string
   price: number
   quantity: number
@@ -23,7 +23,25 @@ export interface ShoppingCart {
 
 export interface PaginatedResult<T> {
   data: T[]
-  totalCount: number
+  count: number
   pageIndex: number
   pageSize: number
+}
+
+export interface CreateProductRequest {
+  name: string
+  description: string
+  category: string[]
+  imagesFiles: string
+  price: number
+  imageUrl?: string
+}
+
+export interface UpdateProductRequest {
+  name: string
+  description: string
+  category: string[]
+  imagesFiles: string
+  price: number
+  imageUrl?: string
 }

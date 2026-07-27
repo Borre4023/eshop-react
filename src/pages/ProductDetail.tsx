@@ -16,7 +16,7 @@ export default function ProductDetail() {
   const basketStore = useBasket()
 
   useEffect(() => {
-    if (id) fetchProductById(Number(id))
+    if (id) fetchProductById(id)
   }, [id, fetchProductById])
 
   if (state.loading) {
@@ -71,7 +71,7 @@ export default function ProductDetail() {
         <div className="md:flex">
           <div className="md:w-1/2 h-96 bg-gray-200">
             <img
-              src={product.imageFile || '/placeholder.png'}
+              src={product.imageUrl || product.imageFiles || '/placeholder.png'}
               alt={product.name}
               className="w-full h-full object-cover"
               onError={(e) => {
@@ -82,7 +82,7 @@ export default function ProductDetail() {
 
           <div className="p-6 md:w-1/2">
             <div className="flex gap-1 mb-4 flex-wrap">
-              {product.category?.map((cat) => (
+              {product.category.map((cat) => (
                 <span
                   key={cat}
                   className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
@@ -95,14 +95,8 @@ export default function ProductDetail() {
             <h1 className="text-2xl font-bold text-gray-800 mb-4">{product.name}</h1>
 
             <p className="text-gray-600 mb-6">
-              {product.description || 'Sin descripcion'}
+              {product.descripcion || 'Sin descripcion'}
             </p>
-
-            {product.availableStock !== undefined && (
-              <p className="text-sm text-gray-500 mb-4">
-                Stock disponible: {product.availableStock}
-              </p>
-            )}
 
             <p className="text-3xl font-bold text-blue-600 mb-6">
               ${formatPrice(product.price)}

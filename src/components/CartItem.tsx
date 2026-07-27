@@ -9,8 +9,8 @@ function formatPrice(price: number) {
 
 interface CartItemProps {
   item: CartItemType
-  onUpdateQuantity: (productId: number, quantity: number) => void
-  onRemove: (productId: number) => void
+  onUpdateQuantity: (productId: string, quantity: number) => void
+  onRemove: (productId: string) => void
 }
 
 export default function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
