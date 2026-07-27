@@ -20,6 +20,36 @@ export default function CartPage() {
     }
   }, [])
 
+  if (basketStore.state.loading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Tu Carrito</h1>
+        <div className="bg-white rounded-lg shadow-md p-6 animate-pulse space-y-4">
+          <div className="h-16 bg-gray-200 rounded" />
+          <div className="h-16 bg-gray-200 rounded" />
+          <div className="h-16 bg-gray-200 rounded" />
+        </div>
+      </div>
+    )
+  }
+
+  if (basketStore.state.error) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Tu Carrito</h1>
+        <div className="text-center py-12">
+          <p className="text-red-500 text-lg mb-4">{basketStore.state.error}</p>
+          <button
+            onClick={() => basketStore.fetchBasket()}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if (basketStore.isEmpty) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -27,7 +57,7 @@ export default function CartPage() {
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg mb-4">Tu carrito esta vacio</p>
           <Link
-            to="/"
+            to="/products"
             className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
           >
             Ver productos

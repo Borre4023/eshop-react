@@ -14,11 +14,13 @@ export default function ProductsPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     setSearchQuery(searchInput)
+    fetchProducts({ page: 1, search: searchInput })
   }
 
   const clearSearch = () => {
     setSearchInput('')
     setSearchQuery('')
+    fetchProducts({ search: '' })
   }
 
   if (state.loading && !state.products.length) {
@@ -46,7 +48,7 @@ export default function ProductsPage() {
         <div className="text-center py-12">
           <p className="text-red-500 text-lg">{state.error}</p>
           <button
-            onClick={fetchProducts}
+            onClick={() => fetchProducts()}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             Reintentar
@@ -136,7 +138,7 @@ export default function ProductsPage() {
         totalPages={totalPages}
         onChange={(p) => {
           setPage(p)
-          fetchProducts()
+          fetchProducts({ page: p })
         }}
       />
     </div>

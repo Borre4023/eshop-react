@@ -24,7 +24,7 @@ export default function CartSummary({ totalPrice, onClear }: CartSummaryProps) {
 
       <div className="flex gap-4 mt-6">
         <Link
-          to="/"
+          to="/products"
           className="flex-1 text-center bg-gray-100 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-200"
         >
           Seguir comprando

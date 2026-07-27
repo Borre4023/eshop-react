@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useMemo, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useMemo, useCallback, useRef, useEffect, type ReactNode } from 'react'
 import { basketApi } from '@/api/basket'
 import type { ShoppingCart, CartItem, Product } from '@/types'
 
@@ -55,6 +55,11 @@ const BasketContext = createContext<BasketContextValue | undefined>(undefined)
 
 export function BasketProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(basketReducer, initialState)
+  const userNameRef = useRef(state.cart.userName)
+
+  useEffect(() => {
+    userNameRef.current = state.cart.userName
+  }, [state.cart.userName])
 
   const totalPrice = useMemo(
     () => state.cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -69,11 +74,12 @@ export function BasketProvider({ children }: { children: ReactNode }) {
   const isEmpty = state.cart.items.length === 0
 
   const fetchBasket = useCallback(async () => {
-    if (!state.cart.userName) return
+    const currentUser = userNameRef.current
+    if (!currentUser) return
     dispatch({ type: 'SET_LOADING', payload: true })
     dispatch({ type: 'SET_ERROR', payload: null })
     try {
-      const response = await basketApi.getByUser(state.cart.userName)
+      const response = await basketApi.getByUser(currentUser)
       const data = response.data
 
       if (data.userName || data.items) {
@@ -90,7 +96,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false })
     }
-  }, [state.cart.userName])
+  }, [])
 
   const initCart = useCallback(
     (userName: string) => {
@@ -101,16 +107,17 @@ export function BasketProvider({ children }: { children: ReactNode }) {
   )
 
   const saveBasket = useCallback(async (items: CartItem[]) => {
-    if (!state.cart.userName) return
+    const currentUser = userNameRef.current
+    if (!currentUser) return
     try {
       await basketApi.save({
-        userName: state.cart.userName,
+        userName: currentUser,
         items,
       })
     } catch {
       dispatch({ type: 'SET_ERROR', payload: 'Error al guardar el carrito' })
     }
-  }, [state.cart.userName])
+  }, [])
 
   const addItem = useCallback(
     (product: Product, quantity = 1) => {
@@ -168,14 +175,15 @@ export function BasketProvider({ children }: { children: ReactNode }) {
   )
 
   const clearBasket = useCallback(async () => {
-    if (!state.cart.userName) return
+    const currentUser = userNameRef.current
+    if (!currentUser) return
     try {
-      await basketApi.delete(state.cart.userName)
+      await basketApi.delete(currentUser)
       dispatch({ type: 'SET_ITEMS', payload: [] })
     } catch {
       dispatch({ type: 'SET_ERROR', payload: 'Error al limpiar el carrito' })
     }
-  }, [state.cart.userName])
+  }, [])
 
   const value = useMemo(
     () => ({

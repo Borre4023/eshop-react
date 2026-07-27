@@ -19,7 +19,7 @@ export default function ProductDetail() {
     if (id) fetchProductById(id)
   }, [id, fetchProductById])
 
-  if (state.loading) {
+  if (state.loading || (id && !state.currentProduct && !state.error)) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
@@ -43,7 +43,7 @@ export default function ProductDetail() {
             {state.error || 'Producto no encontrado'}
           </p>
           <Link
-            to="/"
+            to="/products"
             className="inline-block mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             Volver a productos
@@ -58,7 +58,7 @@ export default function ProductDetail() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link
-        to="/"
+        to="/products"
         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

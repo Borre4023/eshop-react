@@ -62,7 +62,7 @@ interface ProductsContextValue {
   totalPages: number
   hasProducts: boolean
   isLoading: boolean
-  fetchProducts: () => Promise<void>
+  fetchProducts: (opts?: { page?: number; search?: string }) => Promise<void>
   fetchProductById: (id: string) => Promise<void>
   setSearchQuery: (query: string) => void
   setPage: (page: number) => void
@@ -81,15 +81,16 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
   const hasProducts = state.products.length > 0
   const isLoading = state.loading
 
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async (opts?: { page?: number; search?: string }) => {
     dispatch({ type: 'FETCH_START' })
     try {
       const params: Record<string, string | number> = {
-        pageIndex: state.pageIndex,
+        pageIndex: opts?.page ?? state.pageIndex,
         pageSize: state.pageSize,
       }
-      if (state.searchQuery.trim()) {
-        params.name = state.searchQuery.trim()
+      const query = opts?.search ?? state.searchQuery
+      if (query.trim()) {
+        params.name = query.trim()
       }
 
       const response = await productsApi.getAll(params)
