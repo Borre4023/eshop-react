@@ -4,6 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  VITE_CATALOG_URL = "https://catalog-production-04a7.up.railway.app"
+  VITE_API_URL = "https://basket-production-02d1.up.railway.app"
 
 [[redirects]]
   from = "/*"
