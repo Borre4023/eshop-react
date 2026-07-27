@@ -3,22 +3,22 @@ import type { Product, PaginatedResult, CreateProductRequest, UpdateProductReque
 
 export const productsApi = {
   getAll(params?: Record<string, string | number>) {
-    return api.get<PaginatedResult<Product>>('/products', { params })
+    return api.get<PaginatedResult<Product>>('/api/products', { params })
   },
 
   getById(id: string) {
-    return api.get<Product>(`/products/${id}`)
+    return api.get<Product>(`/api/products/${id}`)
   },
 
   create(data: CreateProductRequest) {
-    return api.post<{ id: string }>('/products', data)
+    return api.post<{ id: string }>('/api/products', data)
   },
 
   update(currentName: string, data: UpdateProductRequest) {
-    return api.put<{ isSuccess: boolean }>(`/products/${encodeURIComponent(currentName)}`, data)
+    return api.put<{ isSuccess: boolean }>(`/api/products/${encodeURIComponent(currentName)}`, data)
   },
 
   delete(name: string) {
-    return api.delete<{ isSuccess: boolean }>(`/products/${encodeURIComponent(name)}`)
+    return api.delete<{ isSuccess: boolean }>(`/api/products/${encodeURIComponent(name)}`)
   },
 }

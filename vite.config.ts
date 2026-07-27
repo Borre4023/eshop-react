@@ -14,7 +14,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://basket-production-02d1.up.railway.app',
+        target: 'http://localhost:5201',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
