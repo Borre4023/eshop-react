@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useBasket } from '@/stores/BasketContext'
 import CartItem from '@/components/CartItem'
@@ -6,19 +6,10 @@ import CartSummary from '@/components/CartSummary'
 
 export default function CartPage() {
   const basketStore = useBasket()
-  const initialized = useRef(false)
 
   useEffect(() => {
-    if (initialized.current) return
-    initialized.current = true
-
-    if (!basketStore.state.cart.userName) {
-      const name = prompt('Ingresa tu nombre de usuario:') || 'anonymous'
-      basketStore.initCart(name)
-    } else {
-      basketStore.fetchBasket()
-    }
-  }, [])
+    basketStore.fetchBasket()
+  }, [basketStore])
 
   if (basketStore.state.loading) {
     return (

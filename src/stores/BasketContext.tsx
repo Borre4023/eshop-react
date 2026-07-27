@@ -53,33 +53,26 @@ interface BasketContextValue {
 
 const BasketContext = createContext<BasketContextValue | undefined>(undefined)
 
+const STORAGE_KEY = 'eshop_user_id'
+
+function getUserId(): string {
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored) return stored
+  const id = crypto.randomUUID()
+  localStorage.setItem(STORAGE_KEY, id)
+  return id
+}
+
 export function BasketProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(basketReducer, initialState)
   const userNameRef = useRef(state.cart.userName)
+  const initialized = useRef(false)
 
-  useEffect(() => {
-    userNameRef.current = state.cart.userName
-  }, [state.cart.userName])
-
-  const totalPrice = useMemo(
-    () => state.cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    [state.cart.items]
-  )
-
-  const itemCount = useMemo(
-    () => state.cart.items.reduce((sum, item) => sum + item.quantity, 0),
-    [state.cart.items]
-  )
-
-  const isEmpty = state.cart.items.length === 0
-
-  const fetchBasket = useCallback(async () => {
-    const currentUser = userNameRef.current
-    if (!currentUser) return
+  const fetchBasketData = useCallback(async (userName: string) => {
     dispatch({ type: 'SET_LOADING', payload: true })
     dispatch({ type: 'SET_ERROR', payload: null })
     try {
-      const response = await basketApi.getByUser(currentUser)
+      const response = await basketApi.getByUser(userName)
       const data = response.data
 
       if (data.userName || data.items) {
@@ -97,6 +90,36 @@ export function BasketProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'SET_LOADING', payload: false })
     }
   }, [])
+
+  const fetchBasket = useCallback(async () => {
+    const currentUser = userNameRef.current
+    if (!currentUser) return
+    await fetchBasketData(currentUser)
+  }, [fetchBasketData])
+
+  useEffect(() => {
+    userNameRef.current = state.cart.userName
+  }, [state.cart.userName])
+
+  useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
+    const userId = getUserId()
+    dispatch({ type: 'SET_USER', payload: userId })
+    fetchBasketData(userId)
+  }, [fetchBasketData])
+
+  const totalPrice = useMemo(
+    () => state.cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [state.cart.items]
+  )
+
+  const itemCount = useMemo(
+    () => state.cart.items.reduce((sum, item) => sum + item.quantity, 0),
+    [state.cart.items]
+  )
+
+  const isEmpty = state.cart.items.length === 0
 
   const initCart = useCallback(
     (userName: string) => {
