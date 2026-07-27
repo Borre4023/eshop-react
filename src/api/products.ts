@@ -1,24 +1,24 @@
-import api from './client'
+import catalogApi from './catalogClient'
 import type { Product, PaginatedResult, CreateProductRequest, UpdateProductRequest } from '@/types'
 
 export const productsApi = {
   getAll(params?: Record<string, string | number>) {
-    return api.get<PaginatedResult<Product>>('/api/products', { params })
+    return catalogApi.get<PaginatedResult<Product>>('/products', { params })
   },
 
   getById(id: string) {
-    return api.get<Product>(`/api/products/${id}`)
+    return catalogApi.get<Product>(`/products/${id}`)
   },
 
   create(data: CreateProductRequest) {
-    return api.post<{ id: string }>('/api/products', data)
+    return catalogApi.post<{ id: string }>('/products', data)
   },
 
   update(currentName: string, data: UpdateProductRequest) {
-    return api.put<{ isSuccess: boolean }>(`/api/products/${encodeURIComponent(currentName)}`, data)
+    return catalogApi.put<{ isSuccess: boolean }>(`/products/${encodeURIComponent(currentName)}`, data)
   },
 
   delete(name: string) {
-    return api.delete<{ isSuccess: boolean }>(`/api/products/${encodeURIComponent(name)}`)
+    return catalogApi.delete<{ isSuccess: boolean }>(`/products/${encodeURIComponent(name)}`)
   },
 }
